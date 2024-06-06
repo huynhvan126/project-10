@@ -33,9 +33,12 @@ class StreamingService:
         return self._catalog
     def add_movie(self, movie):
         self._catalog[movie.get_title()] = movie
-    def get_movie(self, title):
+    def delete_movie(self, title):
         if title in self._catalog:
             del self._catalog[title]
+            return True
+        else:
+            return None
 class StreamingGuide:
     """A class to represent a guide to streaming movies."""
     def __init__(self):
