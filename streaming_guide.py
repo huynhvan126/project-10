@@ -51,9 +51,15 @@ class StreamingGuide:
                 self._streaming_services.remove(service)
                 return
     def where_to_watch(self, title):
+        result = []
+        movie_info = None
         for service in self._streaming_services:
             catalog = service.get_catalog()
             if title in catalog:
                 movie = catalog[title]
-                return [f"{movie.get_title()} - ({movie.get_year()})", *service.get_name()]
-        return None
+                if not movie_info:
+                    movie_info = f"{movie.get_title()} - {movie.get_year()})"
+                    result.append(service.get_name)
+        if movie_info:
+            result.insert(0, movie_info)
+        return result if result else None
