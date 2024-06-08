@@ -43,18 +43,20 @@ class StreamingGuide:
     def add_streaming_service(self, service):
         self._streaming_services.append(service)
     def delete_streaming_service(self, name):
-        self._streaming_services = [service for service in self._streaming_services if service.get_name() != name]
-    def where_to_watch(self, title):
-        result = []
-        movie_info = None
+        for i, service in enumerate(self._streaming_services):
+            if service._name == name:
+                del self._streaming_services[i]
+                return
+    def find_movie_year(self, title):
         for service in self._streaming_services:
-            catalog = service.get_catalog()
-            if title in catalog:
-                movie = catalog[title]
-                if not movie_info:
-                    movie_info = f"{movie.get_title()} - {movie.get_year()})"
-                    result.append(service.get_name())
-        if movie_info:
-            return [movie_info] + result
-        else:
-            return None
+            if title in service._catalog:
+                return service._catalog[title].year
+        return -1
+    def where_to_watch(self, title):
+        result = [f"{title} ({self.find_movie_year(title)})" ]
+        found = False
+        for service in self._streaming_services:
+            if title in service.catalog:
+                result.append(service._name)
+                found = True
+            return result if found else None
