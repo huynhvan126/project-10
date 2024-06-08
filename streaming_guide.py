@@ -36,9 +36,6 @@ class StreamingService:
     def delete_movie(self, title):
         if title in self._catalog:
             del self._catalog[title]
-            return True
-        else:
-            return None
 class StreamingGuide:
     """A class to represent a guide to streaming movies."""
     def __init__(self):
@@ -46,10 +43,7 @@ class StreamingGuide:
     def add_streaming_service(self, service):
         self._streaming_services.append(service)
     def delete_streaming_service(self, name):
-        for service in self._streaming_services:
-            if service.get_name() == name:
-                self._streaming_services.remove(service)
-                return
+        self._streaming_services = [service for service in self._streaming_services if service.get_name() != name]
     def where_to_watch(self, title):
         result = []
         movie_info = None
@@ -59,7 +53,8 @@ class StreamingGuide:
                 movie = catalog[title]
                 if not movie_info:
                     movie_info = f"{movie.get_title()} - {movie.get_year()})"
-                    result.append(service.get_name)
+                    result.append(service.get_name())
         if movie_info:
-            result.insert(0, movie_info)
-        return result if result else None
+            return [movie_info] + result
+        else:
+            return None
